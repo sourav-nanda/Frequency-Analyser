@@ -4,7 +4,7 @@ from st_helper import *
 from io import StringIO
 from collections import Counter
 
-st.set_page_config(page_icon='assets/pageicon.png',page_title='Frequency Analyzer')
+st.set_page_config(page_icon='assets/pageicon.png',page_title='Frequency Analyser')
 
 def base_visual_details():
     # Removes the debuging menu as well as footer
@@ -19,10 +19,10 @@ def base_visual_details():
 
 base_visual_details()
 
-st.title('Frequency Analyzer')
+st.title('Frequency Analyser')
 
 
-encoded_text=st.text_area('Enter plaintext:')
+encoded_text=st.text_area('Enter text:').lower()
 
 def pad(size):
 	padding='st.write("")'
@@ -66,7 +66,8 @@ def char_replacer(to_replace,to_replace_with):
 		with mutable_enc_text_display:
 			write_color_text(display_color,'h7',display)
 
-
+def single_char(text):
+	return ' '.join([char for char in text.split() if len(char)==1])
 
 def make_cells():
 
@@ -75,23 +76,9 @@ def make_cells():
 
 	write_color_text('MediumSeaGreen','h6','Enter characters to replace:')
 
-	
-	A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z=st.columns([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,])
-	
-	for col in columns:
-		
-		st.session_state[col]=eval(col).text_input(col,max_chars=1)
-		
-	for chars in columns:
-		if st.session_state[chars]:
-			to_replace_with_chars+=st.session_state[chars].upper()
-			
-
-
 	A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z=st.columns([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,])
 
 	for col in columns:
-
 		st.session_state[col]=eval(col).text_input(col,max_chars=1)
 
 	for chars in columns:
@@ -109,12 +96,14 @@ def get_common_cipher_letters(text):
     c={chars:round((text.count(chars)/len(text))*100,3) for chars in text}
 
     c=Counter(c)
+
     try:
     	c.pop('\n')
     except:
-     write_color_text('green','h2','Enter text to decode')
+        # write_color_text('green','h2','Enter text to decode')
+	    pass
 
-    return ''.join(list(map(lambda x:x[0],c.most_common())))
+    return (''.join(list(map(lambda x:x[0],c.most_common())))).lower()
 
 
 def get_ngraphs(text,size):
@@ -161,8 +150,8 @@ pad(2)
 
 common_cipher_letters=get_common_cipher_letters(encoded_text).replace(' ','')
 common_lexicon_letters='etaoinshrdlcumwfgypbvkjxqz'
-common_lexicon_digraphs='TH,HE,AN,IN,ER,ON,RE,ED,ND,HA,AT,EN,AI,AU,EA,EW,EY,OY,IE,OI'.split(',')[0:10]
-common_lexicon_trigraphs='THE,AND,THA,ENT,ION,TIO,FOR,NDE,HAS,SCR,TIS,SHR,SCH,TCH,EAU,IOU,EOU,SPL,SPR,SQU,THR'.split(',')[0:10]
+common_lexicon_digraphs='TH,HE,IN,ER,AN,RE,ES,ON,ST,NT,EN,AT,AI,AU,EA,EW,EY,OY,IE,OI'.split(',')[0:10]
+common_lexicon_trigraphs='THE,AND,ING,ENT,ION,HER,FOR,THA,NTH,INT,ERE,TIO,SCH,TCH,EAU,IOU,EOU,SPL,SPR,SQU,THR'.split(',')[0:10]
 common_lexicon_doubles='SS,EE,TT,FF,LL,MM,OO'.split(',')
 
 common=st.columns([1,7])
@@ -175,6 +164,9 @@ with common[1]:
 	st.markdown(horizontal_table(common_lexicon_letters,100),unsafe_allow_html=True)
 	st.markdown(horizontal_table(common_cipher_letters,100),unsafe_allow_html=True)
 
+
+# st.info(write_color_text('green','h4',single_char(encoded_text)))
+st.info(f'Singular characters: {single_char(encoded_text)}')
 
 make_cells()
 
@@ -201,9 +193,9 @@ doubles_common.table({'Lexicon Doubles':common_lexicon_doubles})
 def load_config():
 
     st.sidebar.markdown('---')
-
+	
     st.sidebar.download_button('Export Data',str(st.session_state))
-    file=st.sidebar.file_uploader('Import Data','txt')
+    file=st.sidebar.file_uploader('Import Data','txt',)
 
     if file is not None:
         content=StringIO(file.getvalue().decode("utf-8")).read()

@@ -64,7 +64,7 @@ def horizontal_table(chars,width):
     body=''
 
     for char in chars:
-        body+=f'<td style="width: 4%;">{char}</td>'
+        body+=f'<td style="width: 4%"; >{char}</td>'
 
 
     return begin+body+end

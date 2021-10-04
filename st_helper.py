@@ -38,7 +38,6 @@ def max_width(size):
     }}
     </style>    
     """
-    
 
 def remove_table_index():
     return """
@@ -84,6 +83,3 @@ def vertical_table(chars,width):
 </table>'''
 
     return body
-
-
-

@@ -1,4 +1,6 @@
 
+
+
 import json
 import streamlit as st
 from st_helper import *
@@ -14,6 +16,7 @@ def base_visual_details():
     st.markdown(max_width(2500),unsafe_allow_html=True)
 
     st.markdown(remove_table_index(), unsafe_allow_html=True) # Hides the index of tables
+
     
     st.sidebar.markdown(credits(),unsafe_allow_html=True)
 
@@ -59,7 +62,7 @@ def char_replacer(to_replace,to_replace_with):
 
 	text=st.session_state['encoded_text']
 	mapping_table=text.maketrans(to_replace,to_replace_with)
-	
+
 	display=text.translate(mapping_table)
 
 	if display:
@@ -74,6 +77,7 @@ def make_cells():
 	to_replace_chars=''
 
 	write_color_text('MediumSeaGreen','h6','Enter characters to replace:')
+
 	
 	A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z=st.columns([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,])
 	
@@ -85,12 +89,24 @@ def make_cells():
 		if st.session_state[chars]:
 			to_replace_with_chars+=st.session_state[chars].upper()
 			
+
+
+	A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z=st.columns([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,])
+
+	for col in columns:
+
+		st.session_state[col]=eval(col).text_input(col,max_chars=1)
+
+	for chars in columns:
+		if st.session_state[chars]:
+			to_replace_with_chars+=st.session_state[chars].upper()
+
 			to_replace_chars+=chars.lower()
 
 			char_replacer(to_replace_chars,to_replace_with_chars)
 
 
-	
+
 def get_common_cipher_letters(text):
 
     c={chars:round((text.count(chars)/len(text))*100,3) for chars in text}
@@ -157,7 +173,7 @@ common=st.columns([1,7])
 with common[0]:
 	write_color_text('green','h6','Common lexicon letters')
 	write_color_text('green','h6','Common Cipher Letters')
-	
+
 with common[1]:
 	st.markdown(horizontal_table(common_lexicon_letters,100),unsafe_allow_html=True)
 	st.markdown(horizontal_table(common_cipher_letters,100),unsafe_allow_html=True)
@@ -186,7 +202,7 @@ doubles_common.table({'Lexicon Doubles':common_lexicon_doubles})
 
 #Import/Export Data
 def load_config():
-	
+
     st.sidebar.markdown('---')
 
     st.sidebar.download_button('Export Data',str(st.session_state))
@@ -195,6 +211,7 @@ def load_config():
     if file is not None:
         content=StringIO(file.getvalue().decode("utf-8")).read()
         st.session_state=json.loads(content.replace("'",'"'))
+
         
 
 load_config()
@@ -207,4 +224,7 @@ with st.sidebar.expander('See Data',):
 
 # test={' ': 18.266, 'S': 10.173, 'O': 9.827, 'G': 7.746, 'F': 5.896, 'D': 4.855, 'L': 4.509, 'M': 4.046, 'K': 4.046, 'I': 3.815, 'P': 3.468, 'N': 3.353, 'C': 3.006, 'E': 2.659, 'U': 1.965, 'R': 1.965, 'W': 1.85, 'Q': 1.618, "'": 1.387, 'Y': 1.156, ',': 1.156, 'H': 0.925, 'X': 0.694, 'A': 0.578, 'V': 0.347, '.': 0.347, 'B': 0.231, 'J': 0.116}
 # data=pd.DataFrame(index=test.keys(),data=test.values(),columns=['data'])
+
+# st.bar_chart(data)
+
 # st.bar_chart(data)
